@@ -72,6 +72,14 @@ if (window.location.href.includes('leaderboard'))
               labelString: 'Elo'
             }
           }]
+        },
+        pan: {
+          enabled: true,
+          mode: 'x'
+        },
+        zoom: {
+          enabled: true,
+          mode: 'x'
         }
       }
     }
@@ -147,6 +155,14 @@ if (window.location.href.includes('leaderboard'))
                 drawOnChartArea: false
               }
             }]
+        },
+        pan: {
+          enabled: true,
+          mode: 'xy'
+        },
+        zoom: {
+          enabled: true,
+          mode: 'xy'
         }
       }
     }
@@ -204,7 +220,6 @@ if (window.location.href.includes('leaderboard'))
 
     data = await request('new')
     if (!(data instanceof Object)) return error(data)
-    console.log(data.algos)
     topData(data.algos)
     metricsData(data.metrics)
     top.update()
