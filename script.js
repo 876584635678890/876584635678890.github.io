@@ -41,7 +41,7 @@ if (window.location.href.includes('config')) {
     const [startTime, endTime] = window.location.search.substring(6).split('to')
     const startField = initPicker(document.getElementById('start'), startTime), endField = initPicker(document.getElementById('end'), endTime)
     document.getElementById('picker').style.display = 'inline'
-    document.getElementById('apply').onclick = () => window.location.search = `?time=${startField.value}to${endField.value}`
+    document.getElementById('apply').onclick = () => window.location.search = startField.value == undefined ? '' : `?time=${startField.value}${endField.value == undefined ? '' : `to${endField.value}`}`
 
     progress.animate(1 / 3)
     show('retrieving leaderboard and metrics')
