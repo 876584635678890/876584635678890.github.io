@@ -42,6 +42,8 @@ if (window.location.href.includes('config')) {
     const startField = initPicker(document.getElementById('start'), startTime), endField = initPicker(document.getElementById('end'), endTime)
     document.getElementById('picker').style.display = 'inline'
     document.getElementById('apply').onclick = () => window.location.search = startField.value == undefined ? '' : `?time=${startField.value}${endField.value == undefined ? '' : `to${endField.value}`}`
+    document.getElementById('reset').onclick = () => window.location.search = ''
+    document.getElementById('all').onclick = () => window.location.search = '?time=all'
 
     progress.animate(1 / 3)
     show('retrieving leaderboard and metrics')
@@ -244,8 +246,11 @@ if (window.location.href.includes('config')) {
 
     topData(data.algos)
     metricsData(data.metrics)
-    const top = new Chart(document.getElementById('top'), topConfig)
-    const metrics = new Chart(document.getElementById('metrics'), metricsConfig)
+    const topField = document.getElementById('top'), metricsField = document.getElementById('metrics')
+    topField.style.display = 'block'
+    const top = new Chart(topField, topConfig)
+    metricsField.style.display = 'block'
+    const metrics = new Chart(metricsField, metricsConfig)
 
     data = await request('new')
     if (!(data instanceof Object)) return error(data)
