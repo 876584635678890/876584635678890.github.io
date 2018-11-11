@@ -34,7 +34,7 @@ if (window.location.href.includes('config')) {
 
     function initPicker(field, value) {
       new Pikaday({ field: field, onSelect: (date) => field.value = date.toISOString() })
-      if (value != 'all' && value != undefined)
+      if (value != undefined)
         field.value = value
       return field
     }
