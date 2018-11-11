@@ -17,11 +17,11 @@ if (window.location.href.includes('config')) {
       PR.prettyPrint()
     }
   }
-} else
+} else if (window.location.search.includes('time='))
   (async function () {
     const timeFormat = 'DD/MM/YYYY HH:mm'
     async function request(endpoint) {
-      const response = await fetch(`https://c1-terminal.herokuapp.com/leaderboard/${endpoint}`)
+      const response = await fetch(`https://c1-terminal.herokuapp.com/leaderboard/${endpoint}${window.location.search}`)
       if (response.status != 200 && response.status != 201)
         return await response.text()
       else
@@ -31,6 +31,17 @@ if (window.location.href.includes('config')) {
       progress.set(0)
       show(message)
     }
+
+    function initPicker(field, value) {
+      new Pikaday({ field: field, onSelect: (date) => field.value = date.toISOString() })
+      field.value = value
+      return field
+    }
+    const [startTime, endTime] = window.location.search.substring(6).split('to')
+    const startField = initPicker(document.getElementById('start'), startTime), endField = initPicker(document.getElementById('end'), endTime)
+    document.getElementById('picker').style.display = 'inline'
+    document.getElementById('apply').onclick = () => window.location.search = `?time=${startField.value}to${endField.value}`
+
     progress.animate(1 / 3)
     show('retrieving leaderboard and metrics')
 
@@ -244,3 +255,8 @@ if (window.location.href.includes('config')) {
     progress.animate(1)
     show('(thanks for being a cron) new data received (scroll down to see metrics if not visible)')
   })()
+else {
+  const other = new Date()
+  other.setDate(other.getDate() - 7)
+  window.location.search = `?time=${other.toISOString()}to${(new Date()).toISOString()}`
+}
