@@ -33,9 +33,16 @@ if (window.location.href.includes('config')) {
     }
 
     function initPicker(field, value) {
+      let previous = value
+      field.onchange = () => field.value.includes('Z') ? previous = field.value : 0
       new Pikaday({
+        keyboardInput: false,
         field: field, onSelect: (date) => {
-          if (new Date(field.value).getDate() != date.getDate()) field.value = date.toISOString()
+          if ((new Date(previous)).getDate() != date.getDate()) {
+            field.value = date.toISOString()
+            previous = field.value
+          } else
+            field.value = previous
         }
       })
       if (value != undefined)
