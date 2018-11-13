@@ -275,5 +275,7 @@ if (window.location.href.includes('config')) {
 else {
   const other = new Date()
   other.setDate(other.getDate() - 7)
-  window.location.search = `?time=${other.toISOString()}to${(new Date()).toISOString()}`
+  const future = new Date()
+  future.setDate(future.getDate() + 1)
+  window.location.search = `?time=${other.toISOString()}to${future.toISOString()}`
 }
