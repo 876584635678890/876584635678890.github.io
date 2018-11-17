@@ -260,6 +260,10 @@ if (window.location.href.includes('config')) {
     const topField = document.getElementById('top'), metricsField = document.getElementById('metrics')
     topField.style.display = 'block'
     const top = new Chart(topField, topConfig)
+    document.getElementById('invert').onclick = () => {
+      topConfig.data.datasets.forEach((set) => set.hidden = !set.hidden)
+      top.update()
+    }
     metricsField.style.display = 'block'
     const metrics = new Chart(metricsField, metricsConfig)
 
