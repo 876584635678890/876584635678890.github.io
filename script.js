@@ -1,5 +1,16 @@
 const progress = new ProgressBar.Line('#progress', { easing: 'easeOut', from: { color: '#4d3c3f' }, to: { color: '#a3a3d3' }, duration: 3728, trailWidth: .734, step: function (state, bar, _) { bar.path.setAttribute('stroke', state.color) } })
 function show(message) { document.getElementById('content').innerText = message }
+const api = 'https://c1-terminal.herokuapp.com'
+fetch(`${api}/competitions/public/next`).then(response => response.json()).then((json) => {
+  if (document.cookie.includes(json.url)) return
+  const message = document.getElementById('message')
+  message.innerHTML = `${json.message} <a target='_blank' href='${json.url}'>go</a><button id='notice' style='float:right;margin-top:0;padding-top:0'>do not show this notice anymore</button>`
+  message.style.display = 'block'
+  document.getElementById('notice').onclick = () => {
+    message.style.display = 'none'
+    document.cookie = json.url
+  }
+})
 if (window.location.href.includes('config')) {
   with (new WebSocket('wss://play-worker.c1games.com/')) {
     show('connecting..')
@@ -21,7 +32,7 @@ if (window.location.href.includes('config')) {
   (async function () {
     const timeFormat = 'DD/MM/YYYY HH:mm'
     async function request(endpoint) {
-      const response = await fetch(`https://c1-terminal.herokuapp.com/leaderboard/${endpoint}${window.location.search}`)
+      const response = await fetch(`${api}/leaderboard/${endpoint}${window.location.search}`)
       if (response.status != 200 && response.status != 201)
         return await response.text()
       else
