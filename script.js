@@ -200,11 +200,11 @@ if (window.location.href.includes('config')) {
         },
         pan: {
           enabled: true,
-          mode: 'xy'
+          mode: 'x'
         },
         zoom: {
           enabled: true,
-          mode: 'xy'
+          mode: 'x'
         }
       }
     }
