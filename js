@@ -68,7 +68,7 @@ if (window.location.href.includes('config')) {
         datasets: []
       },
       options: {
-        onClick: (_, item) => window.open(`https://https://bcverdict.github.io/?id=${data.algos[item[0]._datasetIndex].id}`),
+        onClick: (_, item) => window.open(`https://bcverdict.github.io/?id=${data.algos[item[0]._datasetIndex].id}`),
         responsive: true,
         title: {
           display: true,
