@@ -68,6 +68,7 @@ if (window.location.href.includes('config')) {
         datasets: []
       },
       options: {
+        onClick: (_, item) => window.open(`https://https://bcverdict.github.io/?id=${data.algos[item[0]._datasetIndex].id}`),
         responsive: true,
         title: {
           display: true,
@@ -77,8 +78,7 @@ if (window.location.href.includes('config')) {
           mode: 'nearest',
           intersect: false,
           backgroundColor: 'rgba(137, 132, 194, .76)',
-          displayColors: false,
-          // itemSort: function (a, b) { return a.y - b.y }
+          displayColors: false
         },
         hover: {
           intersect: false,
