@@ -61,14 +61,14 @@ if (window.location.href.includes('config')) {
 
     let data = await request('get')
     if (!(data instanceof Object)) return error(data)
-    topConfig = {
+    const topConfig = {
       type: 'line',
       data: {
         labels: [],
         datasets: []
       },
       options: {
-        onClick: (_, item) => window.open(`https://bcverdict.github.io/?id=${data.algos[item[0]._datasetIndex].id}`),
+        onClick: (event, item) => { if (item[0]._chart.boxes[0].bottom < event.offsetY) window.open(`https://bcverdict.github.io/?id=${data.algos[item[0]._datasetIndex].id}`) },
         responsive: true,
         title: {
           display: true,
@@ -124,8 +124,7 @@ if (window.location.href.includes('config')) {
           mode: 'x'
         }
       }
-    }
-    metricsConfig = {
+    }, metricsConfig = {
       type: 'line',
       data: {},
       options: {
