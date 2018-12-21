@@ -68,7 +68,7 @@ if (window.location.href.includes('config')) {
         datasets: []
       },
       options: {
-        onClick: (event, item) => { if (item[0]._chart.boxes[0].bottom < event.offsetY) window.open(`https://bcverdict.github.io/?id=${data.algos[item[0]._datasetIndex].id}`) },
+        onClick: (event, item) => { if (item.length > 0 && item[0]._chart.boxes[0].bottom < event.offsetY) window.open(`https://bcverdict.github.io/?id=${data.algos[item[0]._datasetIndex].id}`) },
         responsive: true,
         title: {
           display: true,
