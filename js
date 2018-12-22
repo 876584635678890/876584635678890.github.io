@@ -59,7 +59,7 @@ if (window.location.href.includes('config')) {
     progress.animate(1 / 3)
     show('retrieving leaderboard and metrics')
 
-    let selected = document.location.search.includes('focus') ? document.location.search.split('focus=')[1] : undefined
+    let selected = undefined
     window.oncontextmenu = () => {
       if (selected == undefined) return true
       topConfig.data.datasets.forEach((set, index) => set.hidden = data.algos[index].id == selected ? false : true)
@@ -77,7 +77,7 @@ if (window.location.href.includes('config')) {
         datasets: []
       },
       options: {
-        onHover: (event, item) => selected = item.length > 0 && item[0]._chart.boxes[0].bottom < event.offsetY && event.offsetY < item[0]._chart.boxes[3].bottom ? data.algos[item[0]._datasetIndex].id : undefined,
+        onHover: (event, item) => {selected = item.length > 0 && item[0]._chart.boxes[0].bottom < event.offsetY && event.offsetY < item[0]._chart.boxes[3].bottom ? data.algos[item[0]._datasetIndex].id : undefined},
         onClick: (event, item) => {
           if (item.length > 0 && item[0]._chart.boxes[0].bottom < event.offsetY && event.offsetY < item[0]._chart.boxes[3].bottom) window.open(`https://bcverdict.github.io/?id=${data.algos[item[0]._datasetIndex].id}`)
           if (document.location.search.includes('focus')) window.history.pushState('unfocus', document.title, document.location.search.substring(0, document.location.search.indexOf('&focus')))
@@ -261,7 +261,7 @@ if (window.location.href.includes('config')) {
             Math.seedrandom(algo.name)
             return { t: moment(elo.time).format(timeFormat), y: elo.elo }
           }), borderColor: color = `hsl(${Math.random() * 360} ${Math.random() * 9 + 34}%${Math.random() * 11 + 51}%)`, backgroundColor: color,
-          hidden: selected == undefined ? false : selected == algo.id ? false : true
+          hidden: document.location.search.includes('focus') ? document.location.search.split('focus=')[1] == algo.id ? false : true : false
         }))
       }
     }
