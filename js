@@ -64,6 +64,7 @@ if (window.location.href.includes('config')) {
       if (selected == undefined) return true
       topConfig.data.datasets.forEach((set, index) => set.hidden = data.algos[index].id == selected ? false : true)
       top.update()
+      window.history.pushState('focus', document.title, `${document.location.search.substring(0, document.location.search.indexOf('&focus'))}&focus=${selected}`)
       return false
     }
 
@@ -77,7 +78,10 @@ if (window.location.href.includes('config')) {
       },
       options: {
         onHover: (event, item) => selected = item.length > 0 && item[0]._chart.boxes[0].bottom < event.offsetY && event.offsetY < item[0]._chart.boxes[3].bottom ? data.algos[item[0]._datasetIndex].id : undefined,
-        onClick: (event, item) => { if (item.length > 0 && item[0]._chart.boxes[0].bottom < event.offsetY && event.offsetY < item[0]._chart.boxes[3].bottom) window.open(`https://bcverdict.github.io/?id=${data.algos[item[0]._datasetIndex].id}`) },
+        onClick: (event, item) => {
+          if (item.length > 0 && item[0]._chart.boxes[0].bottom < event.offsetY && event.offsetY < item[0]._chart.boxes[3].bottom) window.open(`https://bcverdict.github.io/?id=${data.algos[item[0]._datasetIndex].id}`)
+          window.history.pushState('unfocus', document.title, document.location.search.substring(0, document.location.search.indexOf('&focus')))
+        },
         responsive: true,
         title: {
           display: true,
