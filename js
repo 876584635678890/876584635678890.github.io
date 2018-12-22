@@ -59,6 +59,14 @@ if (window.location.href.includes('config')) {
     progress.animate(1 / 3)
     show('retrieving leaderboard and metrics')
 
+    let selected = undefined
+    window.oncontextmenu = () => {
+      if (selected == undefined) return true
+      topConfig.data.datasets.forEach((set, index) => set.hidden = data.algos[index].id == selected ? false : true)
+      top.update()
+      return false
+    }
+
     let data = await request('get')
     if (!(data instanceof Object)) return error(data)
     const topConfig = {
@@ -68,7 +76,8 @@ if (window.location.href.includes('config')) {
         datasets: []
       },
       options: {
-        onClick: (event, item) => { if (item.length > 0 && item[0]._chart.boxes[0].bottom < event.offsetY) window.open(`https://bcverdict.github.io/?id=${data.algos[item[0]._datasetIndex].id}`) },
+        onHover: (event, item) => selected = item.length > 0 && item[0]._chart.boxes[0].bottom < event.offsetY && event.offsetY < item[0]._chart.boxes[3].bottom ? data.algos[item[0]._datasetIndex].id : undefined,
+        onClick: (event, item) => { if (item.length > 0 && item[0]._chart.boxes[0].bottom < event.offsetY && event.offsetY < item[0]._chart.boxes[3].bottom) window.open(`https://bcverdict.github.io/?id=${data.algos[item[0]._datasetIndex].id}`) },
         responsive: true,
         title: {
           display: true,
