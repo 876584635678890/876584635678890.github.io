@@ -182,14 +182,6 @@ if (window.location.href.includes('config')) {
             {
               scaleLabel: {
                 display: true,
-                labelString: 'Matches'
-              },
-              display: true,
-              id: 'matches'
-            },
-            {
-              scaleLabel: {
-                display: true,
                 labelString: 'Players'
               },
               display: true,
@@ -201,6 +193,14 @@ if (window.location.href.includes('config')) {
             {
               scaleLabel: {
                 display: true,
+                labelString: 'Matches'
+              },
+              display: true,
+              id: 'matches'
+            },
+            {
+              scaleLabel: {
+                display: true,
                 labelString: 'Algos'
               },
               display: true,
@@ -208,7 +208,15 @@ if (window.location.href.includes('config')) {
               gridLines: {
                 drawOnChartArea: false
               }
-            }]
+            },
+            {
+              scaleLabel: {
+                display: true,
+                labelString: 'Matches per Algo'
+              },
+              display: true,
+              id: 'matches_per_algo'
+            },]
         },
         pan: {
           enabled: true,
@@ -225,13 +233,6 @@ if (window.location.href.includes('config')) {
         labels: data.map((metric) => moment(metric.time).format(timeFormat)),
         datasets: [
           {
-            label: 'Matches Played',
-            borderColor: color = `hsl(233 38%67%)`,
-            backgroundColor: color,
-            data: data.map((metric) => { return { t: moment(metric.time).format(timeFormat), y: metric.matches } }),
-            yAxisID: 'matches'
-          },
-          {
             label: 'Players Registered',
             borderColor: color = `hsl(42 38%67%)`,
             backgroundColor: color,
@@ -239,11 +240,25 @@ if (window.location.href.includes('config')) {
             yAxisID: 'players'
           },
           {
+            label: 'Matches Played',
+            borderColor: color = `hsl(233 38%67%)`,
+            backgroundColor: color,
+            data: data.map((metric) => { return { t: moment(metric.time).format(timeFormat), y: metric.matches } }),
+            yAxisID: 'matches'
+          },
+          {
             label: 'Algos Uploaded',
             borderColor: color = `hsl(346 53%43%)`,
             backgroundColor: color,
             data: data.map((metric) => { return { t: moment(metric.time).format(timeFormat), y: metric.algos } }),
             yAxisID: 'algos'
+          },
+          {
+            label: 'Matches Played over Algos Uploaded',
+            borderColor: color = `hsl(181 42%49%)`,
+            backgroundColor: color,
+            data: data.map((metric) => { return { t: moment(metric.time).format(timeFormat), y: (metric.matches / metric.algos).toFixed(2) } }),
+            yAxisID: 'matches_per_algo'
           }
         ]
       }
