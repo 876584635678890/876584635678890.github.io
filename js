@@ -215,8 +215,11 @@ if (window.location.href.includes('config')) {
                 labelString: 'Matches per Algo'
               },
               display: true,
-              id: 'matches_per_algo'
-            },]
+              id: 'matches_per_algo',
+              gridLines: {
+                drawOnChartArea: false
+              }
+            }]
         },
         pan: {
           enabled: true,
