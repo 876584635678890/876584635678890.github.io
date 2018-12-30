@@ -18,7 +18,8 @@ if (window.location.href.includes('config')) {
     }
   }
 } else if (window.location.search.includes('time='))
-  (async function () {
+  if (!window.location.search.includes('season=')) window.location.search = `${window.location.search}&season=${window.location.search.includes('2018-') ? 'one' : 'current'}`
+  else (async function () {
     const timeFormat = 'DD/MM/YYYY HH:mm'
     async function request(endpoint) {
       const response = await fetch(`${api}/leaderboard/${endpoint}${window.location.search}`)
@@ -49,12 +50,17 @@ if (window.location.href.includes('config')) {
         field.value = value
       return field
     }
-    const [startTime, endTime] = window.location.search.substring(6).split('to')
+    const season = window.location.search.split('season=')[1].split('&')[0]
+    const currentSeason = season == 'current'
+    const seasonDropdown = document.querySelector('#season')
+    seasonDropdown.options[currentSeason ? 0 : 1].selected = 'selected'
+    seasonDropdown.onchange = () => window.location.search = `${window.location.search.split('&season=')[0]}&season=${seasonDropdown.options[seasonDropdown.selectedIndex].value}`
+    const [startTime, endTime] = window.location.search.split('&')[0].substring(6).split('to')
     const startField = initPicker(document.getElementById('start'), startTime), endField = initPicker(document.getElementById('end'), endTime)
     document.getElementById('picker').style.display = 'inline'
-    document.getElementById('apply').onclick = () => window.location.search = startField.value == undefined ? '' : `?time=${startField.value}${endField.value == undefined ? '' : `to${endField.value}`}`
+    document.getElementById('apply').onclick = () => window.location.search = startField.value == undefined ? '' : `?time=${startField.value}${endField.value == undefined ? '' : `to${endField.value}`}&season=${season}`
     document.getElementById('reset').onclick = () => window.location.search = ''
-    document.getElementById('all').onclick = () => window.location.search = '?time=all'
+    document.getElementById('all').onclick = () => window.location.search = `?time=all&season=${season}`
 
     progress.animate(1 / 3)
     show('retrieving leaderboard and metrics')
@@ -68,7 +74,7 @@ if (window.location.href.includes('config')) {
       return false
     }
 
-    let data = await request('get')
+    let data = await (currentSeason ? request('get') : request('archived'))
     if (!(data instanceof Object)) return error(data)
     const topConfig = {
       type: 'line',
@@ -77,7 +83,7 @@ if (window.location.href.includes('config')) {
         datasets: []
       },
       options: {
-        onHover: (event, item) => {selected = item.length > 0 && item[0]._chart.boxes[0].bottom < event.offsetY && event.offsetY < item[0]._chart.boxes[3].bottom ? data.algos[item[0]._datasetIndex].id : undefined},
+        onHover: (event, item) => { selected = item.length > 0 && item[0]._chart.boxes[0].bottom < event.offsetY && event.offsetY < item[0]._chart.boxes[3].bottom ? data.algos[item[0]._datasetIndex].id : undefined },
         onClick: (event, item) => {
           if (item.length > 0 && item[0]._chart.boxes[0].bottom < event.offsetY && event.offsetY < item[0]._chart.boxes[3].bottom) window.open(`https://bcverdict.github.io/?id=${data.algos[item[0]._datasetIndex].id}`)
           if (document.location.search.includes('focus')) window.history.pushState('unfocus', document.title, document.location.search.substring(0, document.location.search.indexOf('&focus')))
@@ -284,7 +290,7 @@ if (window.location.href.includes('config')) {
       }
     }
     progress.animate(2 / 3)
-    show('old data fetched (metrics below leaderboard chart) and updating in the background')
+    if (currentSeason) show('old data fetched (metrics below leaderboard chart) and updating in the background')
 
     topData(data.algos)
     metricsData(data.metrics)
@@ -298,19 +304,22 @@ if (window.location.href.includes('config')) {
     metricsField.style.display = 'block'
     const metrics = new Chart(metricsField, metricsConfig)
 
-    data = await request('new')
-    if (!(data instanceof Object)) return error(data)
-    topData(data.algos)
-    metricsData(data.metrics)
-    top.update()
-    metrics.update()
-    progress.animate(1)
-    show('(thanks for being a cron) new data received (scroll down to see metrics if not visible)')
+    if (currentSeason) {
+      data = await request('new')
+      if (!(data instanceof Object)) return error(data)
+      topData(data.algos)
+      metricsData(data.metrics)
+      top.update()
+      metrics.update()
+      show('(thanks for being a cron) new data received (scroll down to see metrics if not visible)')
+    }
+    progress.set(1)
+    if (!currentSeason) show('archived data loaded successfully')
   })()
 else {
   const other = new Date()
   other.setDate(other.getDate() - 7)
   const future = new Date()
   future.setDate(future.getDate() + 1)
-  window.location.search = `?time=${other.toISOString()}to${future.toISOString()}`
+  window.location.search = `?time=${other.toISOString()}to${future.toISOString()}&season=current`
 }
