@@ -18,8 +18,10 @@ if (window.location.href.includes('config')) {
     }
   }
 } else if (window.location.search.includes('time='))
-  if (!window.location.search.includes('season=')) window.location.search = `${window.location.search}&season=${window.location.search.includes('2018-') ? 'one' : 'current'}`
-  else (async function () {
+  if (!window.location.search.includes('season=')) {
+    const previous = window.location.search.split('&focus=')
+    window.location.search = `${previous[0]}&season=${new Date('2019-01-08T05:00:00.000Z') > new Date(window.location.search.split('to')[1].split('&')[0]) ? 'one' : 'current'}${previous.length > 1 ? `&focus=${previous[1]}` : ''}`
+  } else (async function () {
     const timeFormat = 'DD/MM/YYYY HH:mm'
     async function request(endpoint) {
       const response = await fetch(`${api}/leaderboard/${endpoint}${window.location.search}`)
@@ -55,6 +57,7 @@ if (window.location.href.includes('config')) {
     const seasonDropdown = document.querySelector('#season')
     seasonDropdown.options[currentSeason ? 0 : 1].selected = 'selected'
     seasonDropdown.onchange = () => window.location.search = `${window.location.search.split('&season=')[0]}&season=${seasonDropdown.options[seasonDropdown.selectedIndex].value}`
+    seasonDropdown.style.display = 'inline'
     const [startTime, endTime] = window.location.search.split('&')[0].substring(6).split('to')
     const startField = initPicker(document.getElementById('start'), startTime), endField = initPicker(document.getElementById('end'), endTime)
     document.getElementById('picker').style.display = 'inline'
