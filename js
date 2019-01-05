@@ -20,7 +20,7 @@ if (window.location.href.includes('config')) {
 } else if (window.location.search.includes('time='))
   if (!window.location.search.includes('season=')) {
     const previous = window.location.search.split('&focus=')
-    window.location.search = `${previous[0]}&season=${previous[0].includes('time=all') ? 'current' : new Date('2019-01-04T21:00:00.000Z') > new Date(window.location.search.split('to')[1].split('&')[0]) ? 'one' : 'current'}${previous.length > 1 ? `&focus=${previous[1]}` : ''}`
+    window.location.search = `${previous[0]}&season=${previous[0].includes('time=all') ? 'current' : new Date('2019-01-04T21:31:00.000Z') > new Date(window.location.search.split('to')[1].split('&')[0]) ? 'one' : 'current'}${previous.length > 1 ? `&focus=${previous[1]}` : ''}`
   } else (async function () {
     const timeFormat = 'DD/MM/YYYY HH:mm'
     async function request(endpoint) {
